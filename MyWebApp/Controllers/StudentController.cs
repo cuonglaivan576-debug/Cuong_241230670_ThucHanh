@@ -15,16 +15,16 @@ namespace MyWebApp.Controllers
             {
                 new Student() { Id = 101, Name = "Hải Nam", Branch = Branch.IT,
                     Gender = Gender.Male, IsRegular = true,
-                    Address = "A1-2018", Email = "nam@g.com" },
+                    Address = "A1-2018", Email = "nam@g.com", Score = 8.5 },
                 new Student() { Id = 102, Name = "Minh Tú", Branch = Branch.BE,
                     Gender = Gender.Female, IsRegular = true,
-                    Address = "A1-2019", Email = "tu@g.com" },
+                    Address = "A1-2019", Email = "tu@g.com", Score = 7.0 },
                 new Student() { Id = 103, Name = "Hoàng Phong", Branch = Branch.CE,
                     Gender = Gender.Male, IsRegular = false,
-                    Address = "A1-2020", Email = "phong@g.com" },
+                    Address = "A1-2020", Email = "phong@g.com", Score = 6.5 },
                 new Student() { Id = 104, Name = "Xuân Mai", Branch = Branch.EE,
                     Gender = Gender.Female, IsRegular = false,
-                    Address = "A1-2021", Email = "mai@g.com" }
+                    Address = "A1-2021", Email = "mai@g.com", Score = 9.0 }
             };
         }
 
@@ -35,9 +35,8 @@ namespace MyWebApp.Controllers
             return View(listStudents);
         }
 
-        [HttpGet]
-        [Route("Admin/Student/Add", Name = "addStudent")]
-        public IActionResult Create()
+        // Nạp dữ liệu cho radio button (Gender) và select-option (Branch) trên form
+        private void LoadFormData()
         {
             // Lấy danh sách các giá trị Gender để hiển thị radio button trên form
             ViewBag.AllGenders = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
@@ -50,6 +49,13 @@ namespace MyWebApp.Controllers
                 new SelectListItem { Text = "CE", Value = "3" },
                 new SelectListItem { Text = "EE", Value = "4" }
             };
+        }
+
+        [HttpGet]
+        [Route("Admin/Student/Add", Name = "addStudent")]
+        public IActionResult Create()
+        {
+            LoadFormData();
             return View();
         }
 
@@ -57,18 +63,25 @@ namespace MyWebApp.Controllers
         [Route("Admin/Student/Add")]
         public IActionResult Create(Student s, IFormFile? avatarFile)
         {
-            if (avatarFile != null && avatarFile.Length > 0)
+            if (ModelState.IsValid)
             {
-                var dir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                Directory.CreateDirectory(dir);
-                var fileName = Guid.NewGuid() + Path.GetExtension(avatarFile.FileName);
-                using var stream = new FileStream(Path.Combine(dir, fileName), FileMode.Create);
-                avatarFile.CopyTo(stream);
-                s.Avatar = "/images/" + fileName;
+                if (avatarFile != null && avatarFile.Length > 0)
+                {
+                    var dir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                    Directory.CreateDirectory(dir);
+                    var fileName = Guid.NewGuid() + Path.GetExtension(avatarFile.FileName);
+                    using var stream = new FileStream(Path.Combine(dir, fileName), FileMode.Create);
+                    avatarFile.CopyTo(stream);
+                    s.Avatar = "/images/" + fileName;
+                }
+                s.Id = listStudents.Last<Student>().Id + 1;
+                listStudents.Add(s);
+                return View("Index", listStudents);
             }
-            s.Id = listStudents.Last<Student>().Id + 1;
-            listStudents.Add(s);
-            return View("Index", listStudents);
+
+            // Dữ liệu không hợp lệ: nạp lại dữ liệu cho form và hiển thị lại kèm thông báo lỗi
+            LoadFormData();
+            return View(s);
         }
     }
 }

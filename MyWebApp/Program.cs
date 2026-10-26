@@ -1,7 +1,21 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    // Việt hoá các thông báo lỗi mặc định của model binding (vd: nhập chữ vào ô Điểm)
+    var provider = options.ModelBindingMessageProvider;
+    provider.SetValueMustNotBeNullAccessor(_ => "Vui lòng nhập giá trị.");
+    provider.SetMissingBindRequiredValueAccessor(f => $"Thiếu giá trị cho '{f}'.");
+    provider.SetMissingKeyOrValueAccessor(() => "Vui lòng nhập giá trị.");
+    provider.SetAttemptedValueIsInvalidAccessor((v, f) => $"Giá trị '{v}' không hợp lệ cho '{f}'.");
+    provider.SetUnknownValueIsInvalidAccessor(f => $"Giá trị không hợp lệ cho '{f}'.");
+    provider.SetValueIsInvalidAccessor(v => $"Giá trị '{v}' không hợp lệ.");
+    provider.SetValueMustBeANumberAccessor(f => $"'{f}' phải là một số thực.");
+    provider.SetNonPropertyAttemptedValueIsInvalidAccessor(v => $"Giá trị '{v}' không hợp lệ.");
+    provider.SetNonPropertyUnknownValueIsInvalidAccessor(() => "Giá trị không hợp lệ.");
+    provider.SetNonPropertyValueMustBeANumberAccessor(() => "Giá trị phải là một số thực.");
+});
 
 var app = builder.Build();
 

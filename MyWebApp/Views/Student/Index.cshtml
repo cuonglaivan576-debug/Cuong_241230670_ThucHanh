@@ -22,6 +22,7 @@
             <th>Hệ ĐT</th>
             <th>Địa chỉ</th>
             <th>Email</th>
+            <th>Điểm</th>
             <th>Ảnh</th>
         </tr>
     </thead>
@@ -55,6 +56,7 @@
                 <td>@(s.IsRegular ? "Chính quy" : "Phi chính quy")</td>
                 <td>@s.Address</td>
                 <td>@s.Email</td>
+                <td>@s.Score</td>
                 <td>
                     @if (!string.IsNullOrEmpty(s.Avatar))
                     {
