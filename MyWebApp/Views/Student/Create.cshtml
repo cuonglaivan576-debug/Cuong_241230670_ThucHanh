@@ -7,8 +7,6 @@
     <h1>Thêm sinh viên</h1>
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    @* Lab 1 bước 8: sửa link nút Create. Cách HTML thuần: <form action="/Admin/Student/Add" method="post">
-       Cách Tag Helper (đang dùng): asp-route="studentAdd" *@
     <form asp-route="studentAdd" method="post" enctype="multipart/form-data" class="mt-3">
         <div style="margin-top:7px" class="form-group row">
             <label asp-for="Name" class="col-sm-2 col-form-label"></label>

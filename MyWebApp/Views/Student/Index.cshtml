@@ -1,15 +1,11 @@
 @{
     ViewData["Title"] = "Student List";
-    Layout = "~/Views/Shared/MyLayout.cshtml"; // Lab 2 bước 3
+    Layout = "~/Views/Shared/MyLayout.cshtml";
 }
 @model IEnumerable<Student>
 <div class="ms-2 mx-2">
     <h1>Student List</h1>
 
-    @* Lab 1 bước 8: các cách sửa link nút Create Student *@
-    @* + HTML thuần:  <a href="/Admin/Student/Add" class="btn btn-primary">Create Student</a> *@
-    @* + Tag Helper theo action: <a asp-action="Create" ...> *@
-    @* + Tag Helper theo route (đang dùng): asp-route="studentAdd" *@
     <a asp-route="studentAdd" class="btn btn-primary">Create Student</a>
 
     <table class="table table-striped">
@@ -71,7 +67,7 @@
 </div>
 
 @section Scripts {
-    @* Lab 2 bước 4: ví dụ section Scripts - bấm vào bảng thì đổi màu nền *@
+
     <script>
         var table = document.querySelector("table");
         table.onclick = function onTableClick() {

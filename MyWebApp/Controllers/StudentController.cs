@@ -5,15 +5,12 @@ namespace MyWebApp.Controllers
 {
     public class StudentController : Controller
     {
-        // [BỔ SUNG] để static: mỗi request MVC tạo controller mới, nếu không static thì
-        // sinh viên vừa thêm sẽ mất ở lần tải tiếp theo.
         private static readonly List<Student> listStudents = new List<Student>();
         private readonly IWebHostEnvironment _env;
 
         public StudentController(IWebHostEnvironment env)
         {
             _env = env;
-            //Tạo danh sách sinh viên với 4 dữ liệu mẫu (Lab 1 bước 4)
             if (listStudents.Count == 0)
             {
                 listStudents.AddRange(new List<Student>()
@@ -40,7 +37,6 @@ namespace MyWebApp.Controllers
 
         public IActionResult Index()
         {
-            //Trả về View Index.cshtml cùng Model là danh sách sv listStudents
             return View(listStudents);
         }
 
@@ -54,7 +50,6 @@ namespace MyWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Student s, IFormFile? avatarFile)
         {
-            // [BỔ SUNG - Lab 1 bước 9] upload ảnh đại diện
             if (avatarFile != null && avatarFile.Length > 0)
             {
                 var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -71,7 +66,7 @@ namespace MyWebApp.Controllers
                 {
                     var folder = Path.Combine(_env.WebRootPath, "uploads");
                     Directory.CreateDirectory(folder);
-                    var fileName = Guid.NewGuid().ToString("N") + ext; // đặt tên mới để tránh trùng/đường dẫn độc hại
+                    var fileName = Guid.NewGuid().ToString("N") + ext; 
                     using (var stream = new FileStream(Path.Combine(folder, fileName), FileMode.Create))
                     {
                         await avatarFile.CopyToAsync(stream);
@@ -80,7 +75,6 @@ namespace MyWebApp.Controllers
                 }
             }
 
-            // Lab 3 bước 3: chỉ thêm khi dữ liệu hợp lệ
             if (ModelState.IsValid)
             {
                 s.Id = listStudents.Max(x => x.Id) + 1;
@@ -88,16 +82,13 @@ namespace MyWebApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            // dữ liệu sai -> nạp lại danh sách cho radio/select và hiện lại form kèm lỗi
             PopulateLists();
             return View(s);
         }
 
         private void PopulateLists()
         {
-            //lấy danh sách các giá trị Gender để hiển thị radio button trên form
             ViewBag.AllGenders = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
-            //lấy danh sách các giá trị Branch để hiển thị select-option trên form
             ViewBag.AllBranches = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>()
             {
                 new() { Text = "IT", Value = "1" },

@@ -3,7 +3,6 @@ using MyWebApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Đăng ký SchoolContext (đây là phần đang thiếu)
 builder.Services.AddDbContext<SchoolContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolContext")));
 
@@ -11,7 +10,6 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Tạo CSDL và dữ liệu mẫu nếu chưa có
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

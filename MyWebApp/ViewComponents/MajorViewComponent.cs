@@ -4,7 +4,6 @@ using MyWebApp.Data;
 
 namespace MyWebApp.ViewComponents
 {
-    // Lab 6: hiển thị danh sách chuyên ngành để lọc Learner
     public class MajorViewComponent : ViewComponent
     {
         private readonly SchoolContext db;
