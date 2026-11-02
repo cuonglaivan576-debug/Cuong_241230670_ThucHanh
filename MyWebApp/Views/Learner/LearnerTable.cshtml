@@ -1,0 +1,40 @@
+@model IEnumerable<Learner>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Tên</th>
+            <th>Họ</th>
+            <th>Ngành</th>
+            <th>Ngày Nhập Học</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.LearnerID</td>
+                <td>@s.FirstMidName</td>
+                <td>@s.LastName</td>
+                <td>@s.Major?.MajorName</td>
+                <td>@s.EnrollmentDate</td>
+                <td>
+                    <a asp-controller="Learner" asp-action="Edit" asp-route-id="@s.LearnerID">Edit</a> |
+                    <a asp-controller="Learner" asp-action="Delete" asp-route-id="@s.LearnerID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* Thanh nav-phân trang. [SỬA LỖI ĐỀ] trong Index đề viết mid='ViewBag.mid' (thiếu @) nên không ra giá trị.
+   Razor tự bỏ thuộc tính khi giá trị là null. *@
+<ul class="pagination">
+    @for (int i = 1; i <= (int)(ViewBag.pageNum ?? 0); i++)
+    {
+        <li class="page-item" page="@i" mid="@ViewBag.mid" keyword="@ViewBag.keyword">
+            <a class="page-link" style="cursor:pointer">@i</a>
+        </li>
+    }
+</ul>

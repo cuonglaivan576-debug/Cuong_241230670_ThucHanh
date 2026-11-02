@@ -1,0 +1,44 @@
+/* [BỔ SUNG] Đề dùng template "startbootstrap" (file css/styles.css) mà không đính kèm.
+   Đây là bản CSS tối giản mô phỏng bố cục: top nav + menu trái + nội dung + footer.
+   Nếu có template gốc, hãy chép đè file này (xem Lab 2 bước 1). */
+body { margin: 0; }
+
+.sb-topnav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 56px; z-index: 1039;
+}
+
+#layoutSidenav { padding-top: 56px; }
+
+#layoutSidenav_nav {
+    position: fixed; top: 56px; left: 0; bottom: 0;
+    width: 225px; z-index: 1038;
+    background: #212529; color: rgba(255,255,255,.5);
+    overflow-y: auto; transition: transform .15s ease-in-out;
+}
+#layoutSidenav_nav_inner, .sb-sidenav { height: 100%; display: flex; flex-direction: column; }
+.sb-sidenav-menu { flex-grow: 1; }
+.sb-sidenav-menu-heading {
+    padding: 1.75rem 1rem .75rem; font-size: .75rem; font-weight: bold;
+    text-transform: uppercase; color: rgba(255,255,255,.25);
+}
+.sb-nav-link {
+    display: block; padding: .75rem 1rem; color: rgba(255,255,255,.5); text-decoration: none;
+}
+.sb-nav-link:hover { color: #fff; }
+.sb-sidenav-footer { padding: .75rem; background: #343a40; color: #fff; }
+
+#layoutSidenav_content {
+    margin-left: 225px; min-height: calc(100vh - 56px);
+    display: flex; flex-direction: column; transition: margin .15s ease-in-out;
+}
+#layoutSidenav_content main { flex: 1 0 auto; }
+
+body.sb-sidenav-toggled #layoutSidenav_nav { transform: translateX(-225px); }
+body.sb-sidenav-toggled #layoutSidenav_content { margin-left: 0; }
+
+@media (max-width: 991.98px) {
+    #layoutSidenav_nav { transform: translateX(-225px); }
+    #layoutSidenav_content { margin-left: 0; }
+    body.sb-sidenav-toggled #layoutSidenav_nav { transform: translateX(0); }
+}

@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Student List";
+    Layout = "~/Views/Shared/MyLayout.cshtml"; // Lab 2 bước 3
+}
+@model IEnumerable<Student>
+<div class="ms-2 mx-2">
+    <h1>Student List</h1>
+
+    @* Lab 1 bước 8: các cách sửa link nút Create Student *@
+    @* + HTML thuần:  <a href="/Admin/Student/Add" class="btn btn-primary">Create Student</a> *@
+    @* + Tag Helper theo action: <a asp-action="Create" ...> *@
+    @* + Tag Helper theo route (đang dùng): asp-route="studentAdd" *@
+    <a asp-route="studentAdd" class="btn btn-primary">Create Student</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Ảnh</th>
+                <th>Họ tên</th>
+                <th>Ngày sinh</th>
+                <th>Ngành</th>
+                <th>Giới tính</th>
+                <th>Hệ ĐT</th>
+                <th>Điểm</th>
+                <th>Địa chỉ</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(s.Avatar))
+                        {
+                            <img src="@s.Avatar" alt="avatar" style="width:40px;height:40px;object-fit:cover;border-radius:50%" />
+                        }
+                    </td>
+                    <td>@s.Name</td>
+                    <td>@s.DateOfBorth.ToString("dd/MM/yyyy")</td>
+                    @{
+                        string str = "";
+                        switch (s.Branch)
+                        {
+                            case Branch.IT:
+                                str = "CNTT";
+                                break;
+                            case Branch.BE:
+                                str = "Kinh tế";
+                                break;
+                            case Branch.CE:
+                                str = "Công trình";
+                                break;
+                            case Branch.EE:
+                                str = "Điện - Điện tử";
+                                break;
+                        }
+                    }
+                    <td>@str</td>
+                    <td>@(s.Gender == Gender.Male ? "Nam" : "Nữ")</td>
+                    <td>@(s.IsRegular ? "Chính quy" : "Phi chính quy")</td>
+                    <td>@s.Diem</td>
+                    <td>@s.Address</td>
+                    <td>@s.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    @* Lab 2 bước 4: ví dụ section Scripts - bấm vào bảng thì đổi màu nền *@
+    <script>
+        var table = document.querySelector("table");
+        table.onclick = function onTableClick() {
+            table.style = "background-color: yellow;"
+        }
+    </script>
+}

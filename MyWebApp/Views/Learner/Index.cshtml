@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+@model IEnumerable<Learner>
+<div class="ms-2 mx-2">
+    <h1>Learner List</h1>
+
+    @* Lab 6: danh sách chuyên ngành (ViewComponent) dùng để lọc *@
+    @await Component.InvokeAsync("Major")
+
+    @* Lab 5: form tìm kiếm *@
+    <form id="searchForm" class="form-inline ms-auto me-0 my-2">
+        <div class="input-group" style="max-width:320px">
+            <input id="keyword" class="form-control" name="keyword" type="text" placeholder="Search learner" />
+            <button id="btnSearch" class="btn btn-primary" type="button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+    @* Kết quả (bảng + thanh phân trang) được nạp lại bằng AJAX vào div#content *@
+    <div id="content">
+        <partial name="LearnerTable" model="Model" />
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">Create New Student</a>
+</div>
+
+@section Scripts {
+    <script>
+        // [SỬA LỖI ĐỀ] url "LearnerFilter" (tương đối) sai khi đang ở /Learner (không có /Index).
+        // Dùng Url.Action để luôn ra đúng đường dẫn.
+        var filterUrl = '@Url.Action("LearnerFilter", "Learner")';
+
+        function loadData(data) {
+            $.ajax({
+                url: filterUrl,
+                data: data,
+                success: function (response) {
+                    $("div#content").html(response);
+                }
+            });
+        }
+
+        // click vào số trang (li.page-item được sinh động nên dùng on() trên body)
+        $('body').on('click', 'li.page-item', function () {
+            loadData({
+                mid: $(this).attr("mid"),
+                keyword: $(this).attr("keyword"),
+                pageIndex: $(this).attr("page")
+            });
+        });
+
+        // click vào chuyên ngành để lọc
+        $(".nav li").click(function () {
+            loadData({ mid: $(this).attr("id") });
+        });
+
+        // click nút tìm kiếm
+        $("button#btnSearch").click(function () {
+            loadData({ keyword: $("#keyword").val() });
+        });
+
+        // [BỔ SUNG] nhấn Enter trong ô tìm kiếm = bấm nút tìm kiếm (không reload trang)
+        $("#searchForm").on("submit", function (e) {
+            e.preventDefault();
+            $("button#btnSearch").click();
+        });
+    </script>
+}
